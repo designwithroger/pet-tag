@@ -1,0 +1,10 @@
+<!--
+Photo credits — voluntary courtesy, NOT a license requirement.
+All images below are CC0 / Public Domain / attribution-free; none of this
+needs to appear on the rendered page. Keep it here in the source as a
+thank-you to the creators. Do not surface it as visible on-site attribution.
+
+dog-portrait-1.jpg: "African wild dog (portrait)" by Mathias Appel (wikimedia, cc0 1.0) — https://commons.wikimedia.org/w/index.php?curid=121744440
+dog-portrait-2.webp: "Free dog portrait monochrome photo" by Unknown (rawpixel, cc0 1.0) — https://www.rawpixel.com/image/5920781/photo-image-public-domain-dog-free
+dog-portrait-3.webp: "Black dog portrait" by Unknown (rawpixel, cc0 1.0) — https://www.rawpixel.com/image/3283283/free-photo-image-dog-retriever-labrador-animal
+-->

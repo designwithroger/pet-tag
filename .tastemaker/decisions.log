@@ -1,0 +1,5 @@
+## 2026-07-18 — Initial build (Pet Tag landing)
+status: pending-review
+shown: Full hero card (photo + bottom gradient overlay with name/badge/bio/stats/CTA pills), secondary info cards below (zone, phone), GSAP entrance timeline (photo scale-in, staggered overlay content, staggered below-fold cards).
+why: Matches reference mockup's Option B layout (overlay-embedded CTA row) rather than Option A (white card, CTA below photo) — overlay version reads more like a native "link in bio" / NFC-tap card and keeps the photo as the dominant visual.
+note: Not yet confirmed by user — reviewed via accessibility tree + page text only, screenshot tool was unavailable this session (infra timeout, not app-related). Convert to kept/rejected once user has actually looked at it, ideally on a phone.
