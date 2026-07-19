@@ -5,18 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
 
-// Mechanism from folioblox.framer.website's "Behind the Designs" carousel:
-// perspective(600px), 12 image cards at 280x400/30px-radius spaced 30°
-// apart on a cylinder. The reference is actually static at rest (measured
-// its front card's width for 8s straight — never changed), and that front
-// card sits at ~1518px wide, i.e. ~5.4x its declared 280px: it's deliberately
-// let to blow up as it nears the camera plane, not avoided. Solving
-// scale = perspective / (perspective - radius) for that observed 5.4x at
-// perspective=600 gives the real effective radius: ~490px (our earlier
-// 700px guess, taken directly from the 1400px pair-wrapper's half-width,
-// didn't account for the card's own half-width offset from that wrapper's
-// rotation origin — this 490 is calibrated against the live site's actual
-// rendered output instead).
+// Same 3D-cylinder mechanism as folioblox.framer.website's carousel
+// (perspective + rotateY + translateZ per card, backface-visibility
+// hiding the far side), but tuned to stay in the safe zone: radius is
+// kept well under the perspective distance so no card's Z ever
+// approaches the camera plane. Measuring the reference directly showed
+// its "pierce the camera" blowup only shows up transiently — at rest it
+// reads as this same even taper, large in the middle, smaller at the
+// edges, nothing swallowing the whole row.
 const photos = [
   "/hero/hero-1.jpg",
   "/hero/hero-2.jpg",
@@ -29,17 +25,17 @@ const photos = [
   "/hero/hero-10.jpg",
   "/hero/hero-5.webp",
   "/hero/hero-11.webp",
-  "/hero/hero-12.jpg",
 ];
 
-const COUNT = photos.length; // 12
-const STEP = 360 / COUNT; // 30deg, matches the reference exactly
-const RADIUS = 490; // px, calibrated so the front card reaches ~5.4x scale, same as the reference
-const PERSPECTIVE = 600; // px, matches the reference's perspective(600px)
+const COUNT = photos.length; // 11
+const ANGLE_SPAN = 140; // degrees, total sweep from first to last card
+const STEP = ANGLE_SPAN / (COUNT - 1);
+const START = -ANGLE_SPAN / 2;
+const RADIUS = 350; // px — well under PERSPECTIVE, so cos(0)*RADIUS never nears it
+const PERSPECTIVE = 900; // px
 
 export default function HeroArc() {
   const rootRef = useRef<HTMLDivElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -48,16 +44,11 @@ export default function HeroArc() {
         { opacity: 0, y: 14 },
         { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }
       );
-
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (!reduceMotion && carouselRef.current) {
-        gsap.to(carouselRef.current, {
-          rotationY: "+=360",
-          duration: 48,
-          repeat: -1,
-          ease: "none",
-        });
-      }
+      gsap.fromTo(
+        "[data-arc-photo]",
+        { opacity: 0, scale: 0.85 },
+        { opacity: 1, scale: 1, duration: 0.7, stagger: 0.05, ease: "power3.out" }
+      );
     }, rootRef);
     return () => ctx.revert();
   }, []);
@@ -84,24 +75,24 @@ export default function HeroArc() {
       </div>
 
       <div
-        className="relative w-full h-[300px] sm:h-[440px] overflow-hidden"
+        className="relative w-full h-[280px] sm:h-[420px] overflow-hidden"
         style={{ perspective: `${PERSPECTIVE}px` }}
       >
         <div
-          ref={carouselRef}
           className="absolute left-1/2 top-1/2 w-0 h-0"
           style={{ transformStyle: "preserve-3d" }}
         >
           {photos.map((src, i) => (
             <div
               key={src}
-              className="absolute w-[280px] h-[400px] -translate-x-1/2 -translate-y-1/2 rounded-[30px] overflow-hidden shadow-lg shadow-ink/20 ring-1 ring-ink/5"
+              data-arc-photo
+              className="absolute w-[180px] h-[260px] -translate-x-1/2 -translate-y-1/2 rounded-[24px] overflow-hidden shadow-lg shadow-ink/20 ring-1 ring-ink/5"
               style={{
-                transform: `rotateY(${i * STEP}deg) translateZ(${RADIUS}px)`,
+                transform: `rotateY(${START + i * STEP}deg) translateZ(${RADIUS}px)`,
                 backfaceVisibility: "hidden",
               }}
             >
-              <Image src={src} alt="" fill sizes="280px" className="object-cover" />
+              <Image src={src} alt="" fill sizes="200px" className="object-cover" />
             </div>
           ))}
         </div>
