@@ -5,14 +5,15 @@ import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
 
-// Same 3D-cylinder mechanism as folioblox.framer.website's carousel
-// (perspective + rotateY + translateZ per card, backface-visibility
-// hiding the far side), but tuned to stay in the safe zone: radius is
-// kept well under the perspective distance so no card's Z ever
-// approaches the camera plane. Measuring the reference directly showed
-// its "pierce the camera" blowup only shows up transiently — at rest it
-// reads as this same even taper, large in the middle, smaller at the
-// edges, nothing swallowing the whole row.
+// Exact reproduction of folioblox.framer.website's carousel geometry, now
+// that the convex orientation revealed how its numbers fit together:
+// a full 12-card ring (30° steps), radius 700, perspective 600, cards
+// 280x400 with 30px radius — viewed from the ring's near side, so the
+// center card recedes (z=-700 → projected ~129px wide, matching the
+// ~145px measured on the live site) and the ±90° cards swing out to
+// full size at the screen edges (matching its measured ~276px).
+// backface-visibility:hidden (same as the reference) culls the cards on
+// the front half of the ring, which would otherwise fly past the camera.
 const photos = [
   "/hero/hero-1.jpg",
   "/hero/hero-2.jpg",
@@ -25,14 +26,13 @@ const photos = [
   "/hero/hero-10.jpg",
   "/hero/hero-5.webp",
   "/hero/hero-11.webp",
+  "/hero/hero-12.jpg",
 ];
 
-const COUNT = photos.length; // 11
-const ANGLE_SPAN = 140; // degrees, total sweep from first to last card
-const STEP = ANGLE_SPAN / (COUNT - 1);
-const START = -ANGLE_SPAN / 2;
-const RADIUS = 350; // px — well under PERSPECTIVE, so cos(0)*RADIUS never nears it
-const PERSPECTIVE = 900; // px
+const COUNT = photos.length; // 12
+const STEP = 360 / COUNT; // 30°, same as the reference
+const RADIUS = 700; // px, same as the reference
+const PERSPECTIVE = 600; // px, same as the reference
 
 export default function HeroArc() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -46,8 +46,8 @@ export default function HeroArc() {
       );
       gsap.fromTo(
         "[data-arc-photo]",
-        { opacity: 0, scale: 0.85 },
-        { opacity: 1, scale: 1, duration: 0.7, stagger: 0.05, ease: "power3.out" }
+        { opacity: 0 },
+        { opacity: 1, duration: 0.7, stagger: 0.05, ease: "power3.out" }
       );
     }, rootRef);
     return () => ctx.revert();
@@ -75,7 +75,7 @@ export default function HeroArc() {
       </div>
 
       <div
-        className="relative w-full h-[280px] sm:h-[420px] overflow-hidden"
+        className="relative w-full h-[300px] sm:h-[440px] overflow-hidden"
         style={{ perspective: `${PERSPECTIVE}px` }}
       >
         <div
@@ -86,13 +86,13 @@ export default function HeroArc() {
             <div
               key={src}
               data-arc-photo
-              className="absolute w-[180px] h-[260px] -translate-x-1/2 -translate-y-1/2 rounded-[24px] overflow-hidden shadow-lg shadow-ink/20 ring-1 ring-ink/5"
+              className="absolute w-[280px] h-[400px] -translate-x-1/2 -translate-y-1/2 rounded-[30px] overflow-hidden shadow-lg shadow-ink/20 ring-1 ring-ink/5"
               style={{
-                transform: `rotateY(${START + i * STEP}deg) translateZ(${RADIUS}px)`,
+                transform: `rotateY(${i * STEP}deg) translateZ(-${RADIUS}px)`,
                 backfaceVisibility: "hidden",
               }}
             >
-              <Image src={src} alt="" fill sizes="200px" className="object-cover" />
+              <Image src={src} alt="" fill sizes="280px" className="object-cover" />
             </div>
           ))}
         </div>
