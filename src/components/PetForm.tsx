@@ -7,13 +7,16 @@ export default function PetForm({
   pet,
   action,
   error,
+  tagCode,
 }: {
   pet?: Partial<PetRow>;
   action: (formData: FormData) => void;
   error?: string;
+  tagCode?: string | null;
 }) {
   return (
     <form action={action} className="flex flex-col gap-4">
+      {tagCode && <input type="hidden" name="tag_code" value={tagCode} />}
       {error && (
         <p className="text-sm rounded-lg bg-accent/10 text-accent px-3 py-2">{error}</p>
       )}

@@ -2,13 +2,12 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { PetRow } from "@/lib/pet";
+import { getCurrentProfile } from "@/lib/admin";
 import { logout } from "./actions";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user, isAdmin } = await getCurrentProfile();
   if (!user) redirect("/login");
 
   const { data: pets } = await supabase
@@ -25,11 +24,18 @@ export default async function DashboardPage() {
           <h1 className="font-heading text-2xl font-semibold">Tus mascotas</h1>
           <p className="text-xs text-ink/50">{user.email}</p>
         </div>
-        <form action={logout}>
-          <button className="text-sm text-ink/50 underline" type="submit">
-            Salir
-          </button>
-        </form>
+        <div className="flex items-center gap-3">
+          {isAdmin && (
+            <Link href="/admin" className="text-sm text-teal font-medium underline">
+              Admin
+            </Link>
+          )}
+          <form action={logout}>
+            <button className="text-sm text-ink/50 underline" type="submit">
+              Salir
+            </button>
+          </form>
+        </div>
       </div>
 
       <Link

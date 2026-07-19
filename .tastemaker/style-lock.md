@@ -38,6 +38,19 @@ Mobile-first single-column "link in bio" card, full-viewport on small screens:
 5. Corner radius: `rounded-[28px]` on the card (matches reference's soft-but-present radius), `rounded-full` on all pill/circular buttons
 6. Shadow: soft, single layer, `shadow-xl shadow-black/10` — no double/glow shadows
 
+## Landing hero pattern (`src/components/HeroArc.tsx`, `src/app/page.tsx`)
+Reference: "Behind the Designs" section on folioblox.framer.website. Text and images are two
+separate blocks in normal document flow — never absolutely-positioned around each other — which
+is deliberate: earlier iterations tried true circular/elliptical arc math (photos on a pivot,
+text nested in the gap) and repeatedly fought overlap bugs across breakpoints. Stacking beats
+polar math here.
+1. Logo (`public/logo.svg`), centered, generous top padding
+2. Text block, centered, normal flow: heading → subtext → teal CTA pill — nothing else shares this vertical space
+3. Below it, a single flex row of photo cards, all vertically centered on one line (`items-center`)
+   - Desktop (`sm:` and up): sizes taper from large at the row's edges to small in the center (`xl → lg → md → sm → md → lg → xl`), each card tilted with `rotateY(±Ndeg)` (steps of ~10–12°, max ~32° at the edges) inside a `perspective` container — a coverflow look, no vertical offset needed since centering handles it
+   - Mobile: all cards collapse to one uniform size, no perspective/tilt (rotateY has no visible effect without a perspective ancestor) — row is intentionally wider than the viewport with `overflow-hidden` on the row only, so the edge cards bleed off-screen with a clean clip, no scrollbar
+4. Corner radius: `rounded-[24px]` on every photo card, all cards share the same portrait aspect ratio
+
 ## Spacing/radius scale
 - radius: sm 8px, md 16px, lg 28px, full 9999px
 - spacing: 4/8/12/16/24/32/48px steps, card inner padding 20-24px

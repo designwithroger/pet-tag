@@ -48,28 +48,46 @@ export async function createPet(formData: FormData) {
   if (!user) redirect("/login");
 
   const fields = readPetFields(formData);
+  const tagCode = String(formData.get("tag_code") || "").trim().toUpperCase();
   const baseSlug = slugify(fields.name) || "mascota";
   let slug = baseSlug;
   let attempt = 0;
+  let newPetId: string | null = null;
 
   const photo_url = await uploadPhotoIfPresent(supabase, user.id, formData);
 
   // Retry with a short suffix if the slug is taken (unique constraint on slug).
   while (attempt < 5) {
-    const { error } = await supabase.from("pets").insert({
-      ...fields,
-      slug,
-      photo_url,
-      owner_id: user.id,
-    });
+    const { data, error } = await supabase
+      .from("pets")
+      .insert({ ...fields, slug, photo_url, owner_id: user.id })
+      .select("id")
+      .single();
 
-    if (!error) break;
+    if (!error) {
+      newPetId = data.id;
+      break;
+    }
     if (error.code === "23505") {
       attempt += 1;
       slug = `${baseSlug}-${Math.random().toString(36).slice(2, 6)}`;
       continue;
     }
     redirect(`/dashboard/pets/new?error=${encodeURIComponent(error.message)}`);
+  }
+
+  if (tagCode && newPetId) {
+    await supabase
+      .from("tags")
+      .update({
+        status: "claimed",
+        pet_id: newPetId,
+        claimed_by: user.id,
+        claimed_at: new Date().toISOString(),
+      })
+      .eq("code", tagCode)
+      .eq("status", "unclaimed");
+    revalidatePath(`/t/${tagCode}`);
   }
 
   revalidatePath("/dashboard");

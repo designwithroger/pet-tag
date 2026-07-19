@@ -4,9 +4,9 @@ import { signup } from "./actions";
 export default async function SignupPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; check_email?: string }>;
+  searchParams: Promise<{ error?: string; check_email?: string; next?: string }>;
 }) {
-  const { error, check_email } = await searchParams;
+  const { error, check_email, next } = await searchParams;
 
   if (check_email) {
     return (
@@ -34,6 +34,7 @@ export default async function SignupPage({
         )}
 
         <form action={signup} className="flex flex-col gap-3">
+          <input type="hidden" name="next" value={next ?? "/dashboard"} />
           <div>
             <label className="text-xs text-ink/50 mb-1 block" htmlFor="email">
               Email
@@ -69,7 +70,7 @@ export default async function SignupPage({
 
         <p className="mt-6 text-sm text-ink/60 text-center">
           ¿Ya tienes cuenta?{" "}
-          <Link href="/login" className="text-ink font-medium underline">
+          <Link href={`/login${next ? `?next=${encodeURIComponent(next)}` : ""}`} className="text-ink font-medium underline">
             Inicia sesión
           </Link>
         </p>
