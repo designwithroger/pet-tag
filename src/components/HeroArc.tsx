@@ -8,18 +8,19 @@ import gsap from "gsap";
 // Pixel-matched to folioblox.framer.website's "Behind the Designs" row
 // (measured directly from the live site via devtools: declared card is
 // 280x400, seven cards taper 276x522 → 145x207 → 276x522, gap ~12px,
-// radius 30px). Crucially the reference uses the SAME absolute sizes at
-// every breakpoint — mobile isn't a scaled-down variant, it just lets the
-// two largest edge cards bleed off-screen. We match that: no sm: size
-// variants here, identical row at every width.
+// radius 30px). Confirmed by zoomed screenshot: cards are perfectly flat,
+// axis-aligned rectangles — the wave look comes entirely from the size
+// taper + shared vertical center, no rotation. The reference also uses the
+// SAME absolute sizes at every breakpoint — mobile isn't a scaled-down
+// variant, it just lets the two largest edge cards bleed off-screen.
 const photos = [
-  { src: "/hero/hero-1.jpg", w: 276, h: 522, angle: -22 },
-  { src: "/hero/hero-3.jpg", w: 190, h: 316, angle: -14 },
-  { src: "/hero/hero-4.jpg", w: 155, h: 236, angle: -7 },
-  { src: "/hero/hero-9.jpg", w: 145, h: 207, angle: 0 },
-  { src: "/hero/hero-6.jpg", w: 155, h: 236, angle: 7 },
-  { src: "/hero/hero-7.webp", w: 190, h: 316, angle: 14 },
-  { src: "/hero/hero-8.webp", w: 276, h: 522, angle: 22 },
+  { src: "/hero/hero-1.jpg", w: 276, h: 522 },
+  { src: "/hero/hero-3.jpg", w: 190, h: 316 },
+  { src: "/hero/hero-4.jpg", w: 155, h: 236 },
+  { src: "/hero/hero-9.jpg", w: 145, h: 207 },
+  { src: "/hero/hero-6.jpg", w: 155, h: 236 },
+  { src: "/hero/hero-7.webp", w: 190, h: 316 },
+  { src: "/hero/hero-8.webp", w: 276, h: 522 },
 ];
 
 export default function HeroArc() {
@@ -54,17 +55,9 @@ export default function HeroArc() {
         </Link>
       </div>
 
-      <div
-        className="flex items-center justify-center gap-3 overflow-hidden"
-        style={{ perspective: "1200px", paddingBottom: "8px" }}
-      >
+      <div className="flex items-center justify-center gap-3 overflow-hidden" style={{ paddingBottom: "8px" }}>
         {photos.map((p) => (
-          <div
-            key={p.src}
-            data-arc-photo
-            className="shrink-0"
-            style={{ width: p.w, height: p.h, transform: `rotateY(${p.angle}deg)` }}
-          >
+          <div key={p.src} data-arc-photo className="shrink-0" style={{ width: p.w, height: p.h }}>
             <div className="w-full h-full rounded-[30px] overflow-hidden shadow-lg shadow-ink/20 ring-1 ring-ink/5 relative">
               <Image src={p.src} alt="" fill sizes="280px" className="object-cover" />
             </div>
