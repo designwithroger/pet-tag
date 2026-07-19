@@ -5,13 +5,17 @@ import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
 
-// A real, continuously-spinning 3D cylinder carousel — matches the actual
-// mechanism behind folioblox.framer.website's "Behind the Designs" row
-// (confirmed via devtools: its rotateY matrices change over time, meaning
-// it's a live-animated carousel with no single static state to copy
-// pixel-for-pixel). Every card shares one declared size; the size/tilt
-// variation you see is real perspective foreshortening from translateZ,
-// not hand-authored per-card values.
+// Exact mechanism from folioblox.framer.website's "Behind the Designs"
+// carousel — extracted from its actual CSS rules (devtools), not guessed:
+//   .framer-1wafx0o "Slider"  -> transform: perspective(600px)
+//   .framer-75r392  "Circle"  -> the rotor; its rotateY is driven continuously
+//   12 image cards, each 280x400px, border-radius 30px, backface-visibility
+//   hidden, arranged in 6 "pair" wrappers (each a 1400px-wide flex row with
+//   justify-content: space-between, so one card sits at the far left edge
+//   and one at the far right edge — i.e. ±700px from the wrapper's own
+//   center) spaced 30° apart. That's mathematically identical to 12 cards
+//   each placed with `translateZ(700px) rotateY(n * 30deg)` around one
+//   pivot, which is what we build directly below.
 const photos = [
   "/hero/hero-1.jpg",
   "/hero/hero-2.jpg",
@@ -23,10 +27,14 @@ const photos = [
   "/hero/hero-8.webp",
   "/hero/hero-10.jpg",
   "/hero/hero-5.webp",
+  "/hero/hero-11.webp",
+  "/hero/hero-12.jpg",
 ];
 
-const COUNT = photos.length;
-const STEP = 360 / COUNT;
+const COUNT = photos.length; // 12
+const STEP = 360 / COUNT; // 30deg, matches the reference exactly
+const RADIUS = 700; // px, matches the reference's 1400px-wide pair wrapper / 2
+const PERSPECTIVE = 600; // px, matches the reference's perspective(600px)
 
 export default function HeroArc() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -40,11 +48,19 @@ export default function HeroArc() {
         { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }
       );
 
+      if (carouselRef.current) {
+        // Push the whole cylinder back in Z so its nearest card never
+        // pierces the perspective plane (radius 700 > perspective 600
+        // otherwise sends that card's projection to infinity/NaN territory
+        // and Chrome drops the whole 3D layer instead of just that card).
+        gsap.set(carouselRef.current, { z: -500 });
+      }
+
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (!reduceMotion && carouselRef.current) {
         gsap.to(carouselRef.current, {
           rotationY: "+=360",
-          duration: 40,
+          duration: 48,
           repeat: -1,
           ease: "none",
         });
@@ -75,8 +91,8 @@ export default function HeroArc() {
       </div>
 
       <div
-        className="relative w-full h-[260px] sm:h-[420px] overflow-hidden"
-        style={{ perspective: "1400px" }}
+        className="relative w-full h-[300px] sm:h-[440px] overflow-hidden"
+        style={{ perspective: `${PERSPECTIVE}px` }}
       >
         <div
           ref={carouselRef}
@@ -86,15 +102,13 @@ export default function HeroArc() {
           {photos.map((src, i) => (
             <div
               key={src}
-              className="absolute w-[130px] h-[195px] sm:w-[220px] sm:h-[330px] [--z:150px] sm:[--z:260px] -translate-x-1/2 -translate-y-1/2"
+              className="absolute w-[280px] h-[400px] -translate-x-1/2 -translate-y-1/2 rounded-[30px] overflow-hidden shadow-lg shadow-ink/20 ring-1 ring-ink/5"
               style={{
-                transform: `rotateY(${i * STEP}deg) translateZ(var(--z))`,
+                transform: `rotateY(${i * STEP}deg) translateZ(${RADIUS}px)`,
                 backfaceVisibility: "hidden",
               }}
             >
-              <div className="w-full h-full rounded-[24px] sm:rounded-[30px] overflow-hidden shadow-lg shadow-ink/20 ring-1 ring-ink/5 relative">
-                <Image src={src} alt="" fill sizes="220px" className="object-cover" />
-              </div>
+              <Image src={src} alt="" fill sizes="280px" className="object-cover" />
             </div>
           ))}
         </div>
