@@ -1,28 +1,27 @@
+import Image from "next/image";
 import Link from "next/link";
+import HeroArc from "@/components/HeroArc";
 
 export default function Home() {
   return (
-    <main className="flex-1 flex items-center justify-center px-4 py-12">
-      <div className="w-full max-w-sm text-center">
-        <h1 className="font-serif text-3xl font-semibold tracking-tight mb-3">Pet Tag</h1>
-        <p className="text-sm text-ink/60 mb-8 leading-relaxed">
-          Crea el perfil de tu mascota, genera su link y escríbelo en un tag NFC. Cuando alguien
-          lo escanee, verá cómo contactarte.
+    <main className="flex-1 flex flex-col">
+      <div className="pt-16 sm:pt-24 pb-6 sm:pb-10 flex justify-center">
+        <Image src="/logo.svg" alt="Petag" width={1600} height={497} className="h-8 sm:h-11 w-auto" priority />
+      </div>
+
+      <HeroArc />
+
+      <div className="pb-6 text-center">
+        <p className="text-sm text-ink/50">
+          ¿ya tienes cuenta?{" "}
+          <Link href="/login" className="text-teal font-heading font-semibold">
+            Inicia sesion
+          </Link>
         </p>
-        <div className="flex flex-col gap-3">
-          <Link
-            href="/signup"
-            className="flex items-center justify-center h-11 rounded-full bg-ink text-cream text-sm font-medium"
-          >
-            Crear el perfil de mi mascota
-          </Link>
-          <Link
-            href="/login"
-            className="flex items-center justify-center h-11 rounded-full border border-ink/12 text-sm font-medium"
-          >
-            Ya tengo cuenta
-          </Link>
-        </div>
+      </div>
+
+      <div className="pb-8 text-center">
+        <p className="text-xs text-ink/35">Powered by Capybara Creative</p>
       </div>
     </main>
   );

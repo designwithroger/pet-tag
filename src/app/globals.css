@@ -10,6 +10,7 @@
   --star: #f5a623;
   --olive: #5c6e3c;
   --mustard: #d9a441;
+  --teal: #1c4b4e;
 }
 
 @theme inline {
@@ -22,8 +23,9 @@
   --color-star: var(--star);
   --color-olive: var(--olive);
   --color-mustard: var(--mustard);
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-fraunces);
+  --color-teal: var(--teal);
+  --font-sans: var(--font-clash-regular);
+  --font-heading: var(--font-clash-semibold);
 }
 
 body {

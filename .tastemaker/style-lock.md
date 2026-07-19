@@ -12,13 +12,22 @@ Read from the reference: near-black overlay gradient (not pure black), warm off-
 - `--verified` `#3B82F6` — verified badge blue (kept close to reference, not extracted)
 - `--star` `#F5A623` — rating star amber
 - `--olive` `#5C6E3C` / `--mustard` `#D9A441` — supporting illustrated-backdrop tones for decorative gradient/blobs behind the pet photo if no photo is used
+- `--teal` `#1C4B4E` — real brand color from the client-supplied logo SVG (`public/logo.svg`), used for the landing page logo, primary CTA, and link accents. 8.55:1 on cream, 9.70:1 white-on-teal — both pass AA.
 
 Never pair `--ink` text on `--ink` fill (fails, see check_contrast.py output) — CTA text is always `--cream`/white on ink, never ink-on-ink.
 
-## Typography
-- Headings: `Fraunces` (serif, has real personality, mirrors the "Which is Better" editorial serif headline in the reference) — variable weight, use 600/700
+## Typography (superseded 2026-07-19 — real brand assets arrived)
+- Headings/UI-emphasis: `Clash Display` Semibold (self-hosted via `next/font/local`, `src/app/fonts/ClashDisplay-Semibold.woff2`, Fontshare free license, web use confirmed) — Tailwind class `font-heading`
+- Body: `Clash Display` Regular (`ClashDisplay-Regular.woff2`) — Tailwind class `font-sans` (default)
+- Replaces the original Fraunces/Inter pairing below, which was the pre-brand placeholder. `font-serif`/`--font-fraunces` no longer exist anywhere in the codebase — don't reintroduce them.
+- Logo: real wordmark SVG at `public/logo.svg`, teal fill `#1C4B4E`
+
+<details><summary>Original placeholder pairing (superseded, kept for history)</summary>
+
+- Headings: `Fraunces` (serif) — variable weight, use 600/700
 - Body/UI: `Inter` — 400/500/600
 - Both via `next/font/google`, no CDN
+</details>
 
 ## Layout pattern
 Mobile-first single-column "link in bio" card, full-viewport on small screens:
@@ -36,7 +45,7 @@ Mobile-first single-column "link in bio" card, full-viewport on small screens:
 ## Assets
 - Icons: Iconify, Lucide set, tinted to `--ink` (on cream) or `--cream` (on ink overlay) depending on placement — fetched via `fetch_icons.py`, no attribution needed
 - Photo: real photo placeholder for the pet (dog) fetched from Openverse (CC0/PDM, attribution-free) via `fetch_photos.py` — swap for the real pet's photo later, file path documented in code comment
-- Logo/favicon: constructed paw-print-in-circle mark in `--ink`/`--accent`, not a letter-in-a-box
+- Logo: real client-supplied wordmark SVG (`public/logo.svg`, `--teal` fill) — supersedes the earlier plan for a constructed paw-print mark. Favicon still needs generating from this mark via `export_favicons.py`.
 - Motion: GSAP + ScrollTrigger via `assets/gsap-starter.js` — hero entrance timeline (photo scale-in, overlay content staggered fade/rise), reveal-on-scroll for the secondary info block below the fold
 
 ## Decisions log

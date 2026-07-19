@@ -12,7 +12,7 @@ export default async function SignupPage({
     return (
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-sm text-center">
-          <h1 className="font-serif text-2xl font-semibold mb-2">Revisa tu correo</h1>
+          <h1 className="font-heading text-2xl font-semibold mb-2">Revisa tu correo</h1>
           <p className="text-sm text-ink/60">
             Te enviamos un link de confirmación. Ábrelo para activar tu cuenta y luego inicia sesión.
           </p>
@@ -24,7 +24,7 @@ export default async function SignupPage({
   return (
     <main className="flex-1 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
-        <h1 className="font-serif text-2xl font-semibold mb-1">Crea tu cuenta</h1>
+        <h1 className="font-heading text-2xl font-semibold mb-1">Crea tu cuenta</h1>
         <p className="text-sm text-ink/60 mb-6">
           Regístrate para crear el perfil de tu mascota y generar su link.
         </p>

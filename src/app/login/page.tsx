@@ -11,7 +11,7 @@ export default async function LoginPage({
   return (
     <main className="flex-1 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
-        <h1 className="font-serif text-2xl font-semibold mb-1">Inicia sesión</h1>
+        <h1 className="font-heading text-2xl font-semibold mb-1">Inicia sesión</h1>
         <p className="text-sm text-ink/60 mb-6">Entra para administrar los perfiles de tus mascotas.</p>
 
         {error && (

@@ -61,7 +61,7 @@ export default function PetCard({ pet }: { pet: PetRow }) {
 
         <div className="absolute inset-x-0 bottom-0 p-5 flex flex-col gap-3">
           <div data-hero-stagger className="flex items-center gap-1.5">
-            <h1 className="font-serif text-2xl font-semibold text-cream tracking-tight">
+            <h1 className="font-heading text-2xl font-semibold text-cream tracking-tight">
               {pet.name}
             </h1>
             {pet.verified && (

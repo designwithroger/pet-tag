@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
-  subsets: ["latin"],
-  weight: ["600", "700"],
+const clashSemibold = localFont({
+  src: "./fonts/ClashDisplay-Semibold.woff2",
+  variable: "--font-clash-semibold",
+  weight: "600",
+  display: "swap",
 });
 
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
+const clashRegular = localFont({
+  src: "./fonts/ClashDisplay-Regular.woff2",
+  variable: "--font-clash-regular",
+  weight: "400",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -27,9 +29,9 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${fraunces.variable} ${inter.variable} h-full antialiased`}
+      className={`${clashSemibold.variable} ${clashRegular.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-cream text-ink font-sans">
+      <body className="min-h-full flex flex-col bg-cream text-ink font-sans overflow-x-hidden">
         {children}
       </body>
     </html>

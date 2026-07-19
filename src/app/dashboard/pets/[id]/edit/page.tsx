@@ -34,7 +34,7 @@ export default async function EditPetPage({
 
   return (
     <main className="flex-1 px-4 py-8 max-w-lg mx-auto w-full">
-      <h1 className="font-serif text-2xl font-semibold mb-1">Editar {pet.name}</h1>
+      <h1 className="font-heading text-2xl font-semibold mb-1">Editar {pet.name}</h1>
       <p className="text-xs text-ink/50 mb-6">Link público: /p/{pet.slug}</p>
 
       <PetForm pet={pet} action={updatePetWithId} error={error} />

@@ -18,7 +18,7 @@ export default async function NewPetPage({
 
   return (
     <main className="flex-1 px-4 py-8 max-w-lg mx-auto w-full">
-      <h1 className="font-serif text-2xl font-semibold mb-6">Nueva mascota</h1>
+      <h1 className="font-heading text-2xl font-semibold mb-6">Nueva mascota</h1>
       <PetForm action={createPet} error={error} />
     </main>
   );

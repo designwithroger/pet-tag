@@ -1,0 +1,10 @@
+<!--
+Photo credits — voluntary courtesy, NOT a license requirement.
+All images below are CC0 / Public Domain / attribution-free; none of this
+needs to appear on the rendered page. Keep it here in the source as a
+thank-you to the creators. Do not surface it as visible on-site attribution.
+
+puppy-playing-grass-1.jpg: "Brown Dog" by Freestocks.org (stocksnap, cc0 1.0) — https://stocksnap.io/photo/brown-dog-MT7FEOQT1M
+puppy-playing-grass-2.jpg: "Dog Puppy" by Jordan Whitt (stocksnap, cc0 1.0) — https://stocksnap.io/photo/dog-puppy-UNQVZE3HTD
+puppy-playing-grass-3.jpg: "Black Puppy" by ela haney (stocksnap, cc0 1.0) — https://stocksnap.io/photo/black-puppy-TFRALNNOCG
+-->

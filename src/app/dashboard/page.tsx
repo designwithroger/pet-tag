@@ -22,7 +22,7 @@ export default async function DashboardPage() {
     <main className="flex-1 px-4 py-8 max-w-lg mx-auto w-full">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="font-serif text-2xl font-semibold">Tus mascotas</h1>
+          <h1 className="font-heading text-2xl font-semibold">Tus mascotas</h1>
           <p className="text-xs text-ink/50">{user.email}</p>
         </div>
         <form action={logout}>
