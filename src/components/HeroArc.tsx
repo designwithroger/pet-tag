@@ -36,6 +36,7 @@ const PERSPECTIVE = 600; // px, same as the reference
 
 export default function HeroArc() {
   const rootRef = useRef<HTMLDivElement>(null);
+  const ringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -49,6 +50,20 @@ export default function HeroArc() {
         { opacity: 0 },
         { opacity: 1, duration: 0.7, stagger: 0.05, ease: "power3.out" }
       );
+
+      // Spin the whole ring. Because the cards sit on the near side
+      // (translateZ negative), rotating the ring sweeps them across the
+      // front, edge-to-edge, exactly like the reference. Skipped for users
+      // who prefer reduced motion.
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!reduceMotion && ringRef.current) {
+        gsap.to(ringRef.current, {
+          rotationY: "-=360",
+          duration: 44,
+          repeat: -1,
+          ease: "none",
+        });
+      }
     }, rootRef);
     return () => ctx.revert();
   }, []);
@@ -79,6 +94,7 @@ export default function HeroArc() {
         style={{ perspective: `${PERSPECTIVE}px` }}
       >
         <div
+          ref={ringRef}
           className="absolute left-1/2 top-1/2 w-0 h-0"
           style={{ transformStyle: "preserve-3d" }}
         >
