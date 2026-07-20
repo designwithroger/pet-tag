@@ -87,6 +87,12 @@ export default function HeroArc() {
         >
           Crear el perfil de mi mascota
         </Link>
+        <p className="mt-6 text-sm text-ink/50">
+          ¿ya tienes cuenta?{" "}
+          <Link href="/login" className="text-teal font-heading font-semibold">
+            Inicia sesion
+          </Link>
+        </p>
       </div>
 
       <div

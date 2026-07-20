@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import HeroArc from "@/components/HeroArc";
 
 export default function Home() {
@@ -11,16 +10,7 @@ export default function Home() {
 
       <HeroArc />
 
-      <div className="pb-6 text-center">
-        <p className="text-sm text-ink/50">
-          ¿ya tienes cuenta?{" "}
-          <Link href="/login" className="text-teal font-heading font-semibold">
-            Inicia sesion
-          </Link>
-        </p>
-      </div>
-
-      <div className="pb-8 text-center">
+      <div className="pt-8 pb-8 text-center">
         <p className="text-xs text-ink/35">Powered by Capybara Creative</p>
       </div>
     </main>
