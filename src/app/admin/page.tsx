@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/admin";
 import { generateTags, unlinkTag } from "./actions";
+import CopyTagLink from "@/components/CopyTagLink";
 
 export default async function AdminPage() {
   const { user, isAdmin } = await getCurrentProfile();
@@ -42,7 +43,7 @@ export default async function AdminPage() {
           <span>{claimedCount} activados</span>
         </div>
 
-        <form action={generateTags} className="flex items-center gap-2 mb-6">
+        <form action={generateTags} className="flex items-center gap-2 mb-3">
           <input
             type="number"
             name="count"
@@ -58,6 +59,11 @@ export default async function AdminPage() {
             Generar tags
           </button>
         </form>
+        <p className="text-xs text-ink/45 mb-6 leading-relaxed">
+          Para cada collar: toca <span className="font-medium">Copiar link</span> y graba esa URL en
+          el chip NFC con una app como NFC Tools (Write → URL). El collar queda listo para enviar; el
+          cliente lo activa al escanearlo.
+        </p>
 
         <div className="flex flex-col gap-2 max-h-96 overflow-y-auto">
           {tags?.map((t) => (
@@ -85,6 +91,7 @@ export default async function AdminPage() {
               >
                 /t/{t.code}
               </a>
+              <CopyTagLink code={t.code} />
               {t.status === "claimed" && (
                 <form action={unlinkTag.bind(null, t.id)}>
                   <button type="submit" className="text-xs text-accent underline">
