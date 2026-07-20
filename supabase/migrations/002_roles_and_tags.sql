@@ -13,21 +13,27 @@ create table if not exists public.profiles (
 
 alter table public.profiles enable row level security;
 
+-- Admin check as a SECURITY DEFINER function so the admin policies below can
+-- reference it WITHOUT recursing into profiles' own RLS (a plain subquery on
+-- profiles inside a profiles policy causes "infinite recursion detected").
+create or replace function public.is_admin()
+returns boolean as $$
+  select exists (
+    select 1 from public.profiles where id = auth.uid() and role = 'admin'
+  );
+$$ language sql security definer stable set search_path = public;
+
 create policy "Users can read their own profile"
   on public.profiles for select
   using (auth.uid() = id);
 
 create policy "Admins can read all profiles"
   on public.profiles for select
-  using (
-    exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
-  );
+  using (public.is_admin());
 
 create policy "Admins can update roles"
   on public.profiles for update
-  using (
-    exists (select 1 from public.profiles p where p.id = auth.uid() and p.role = 'admin')
-  );
+  using (public.is_admin());
 
 -- Auto-create a profile row whenever a new auth user signs up.
 create or replace function public.handle_new_user()
@@ -52,12 +58,6 @@ on conflict (id) do nothing;
 
 -- Seed the primary admin. Safe to re-run.
 update public.profiles set role = 'admin' where email = 'rfigueroa@capybaracreative.xyz';
-
--- Helper used by tag RLS policies below.
-create or replace function public.is_admin()
-returns boolean as $$
-  select exists (select 1 from public.profiles where id = auth.uid() and role = 'admin');
-$$ language sql security definer stable set search_path = public;
 
 -- ---------------------------------------------------------------------------
 -- NFC tags — decoupled from pets so a physical tag can be pre-written with a
