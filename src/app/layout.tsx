@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import SiteHeader from "@/components/SiteHeader";
 import "./globals.css";
 
 const clashSemibold = localFont({
@@ -32,6 +33,7 @@ export default function RootLayout({
       className={`${clashSemibold.variable} ${clashRegular.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-cream text-ink font-sans overflow-x-hidden">
+        <SiteHeader />
         {children}
       </body>
     </html>
